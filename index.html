@@ -199,10 +199,31 @@ td.n{font-family:'IBM Plex Mono',monospace; text-align:right}
   <div class="panel">
     <div class="ph"><h2>What this will cover</h2><span class="tag">in development</span></div>
     <div class="pb">
+      <div class="panel" style="margin:0 0 14px;box-shadow:none">
+        <div class="ph"><h2>Where your building is losing money</h2><span class="tag">ranked by payback</span></div>
+        <div class="pb">
+          <p style="font-size:11.5px;color:var(--ink2)">Commercial buildings waste energy differently from homes.
+            The geyser is not the story — HVAC, refrigeration and running hours are.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px">
+            <label style="grid-column:1/-1">Monthly electricity spend (R)
+              <input type="number" id="c_spend" value="85000" step="5000"></label>
+            <label>Building type
+              <select id="c_type">
+                <option value="office">Office</option>
+                <option value="retail">Retail</option>
+                <option value="cold">Cold storage / food retail</option>
+                <option value="hotel">Hotel / hospitality</option>
+              </select></label>
+            <label>On a time-of-use tariff?
+              <select id="c_tou"><option value="1">Yes</option><option value="0">No / not sure</option></select></label>
+          </div>
+          <button class="go" onclick="runCommercial()">Show me the opportunities</button>
+          <div id="c_out" style="margin-top:12px"></div>
+        </div>
+      </div>
+
       <div class="soon">
-        <p><strong>Commercial buildings waste energy differently from homes.</strong> The geyser is not the story;
-          HVAC, refrigeration and lighting hours are.</p>
-        <p style="margin-top:8px">Planned tools and guidance:</p>
+        <p style="margin-top:2px">Also planned:</p>
         <ul style="margin:6px 0 0 18px;line-height:1.7">
           <li><strong>HVAC scheduling and setpoints</strong> — the cheapest commercial saving there is, and almost
             always misconfigured</li>
@@ -223,17 +244,86 @@ td.n{font-family:'IBM Plex Mono',monospace; text-align:right}
 <!-- ══════════════ INDUSTRIAL ══════════════ -->
 <section class="seg" id="seg-ind">
   <div class="band"><div class="t">Industrial</div>
-    <div class="s">Process heat is the prize — and nobody here gives independent advice on it</div></div>
+    <div class="s">The gas cliff is coming. Electrification is one of only three answers.</div></div>
   <div class="panel">
     <div class="ph"><h2>What this will cover</h2><span class="tag">in development</span></div>
     <div class="pb">
-      <p style="font-size:11.5px"><strong>Most South African process heat below 150 °C is still coal or heavy fuel
-        oil.</strong> Industrial heat pumps are commercially available to about that temperature, and at a
-        coefficient of performance around three they often already beat coal on running cost — before any carbon
-        price is applied. That is the single largest unexploited efficiency opportunity in the country, and it is
-        barely discussed.</p>
+      <div style="border-left:3px solid var(--alert);padding:10px 13px;background:var(--panel2);margin-bottom:13px">
+        <div style="font-family:'Saira Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:.03em;color:var(--alert2);margin-bottom:5px">
+          THE GAS CLIFF IS THE DECISION IN FRONT OF YOU</div>
+        <p style="font-size:11.5px;line-height:1.6;margin-bottom:7px">The Pande–Temane fields in Mozambique supply
+          roughly 90 % of South Africa's gas through the Rompco pipeline, and about three quarters of the recoverable
+          reserves are already gone. Sasol has extended the plateau more than once, but supply to third-party
+          industrial customers ends — and cannot be replaced except by imported LNG. Over 300 industrial customers
+          are affected, and the Industrial Gas Users' Association has called it an existential risk.</p>
+        <p style="font-size:11.5px;line-height:1.6;margin-bottom:7px">If you burn gas for process heat you have
+          three options, and only three:</p>
+        <ol style="font-size:11.5px;line-height:1.65;margin:0 0 7px 18px">
+          <li><strong>Switch to coal.</strong> Cheapest per kilowatt-hour today. It raises your emissions by roughly
+            70 %, exposes you to the carbon border taxes below, and moves you onto a fuel your customers are
+            increasingly unwilling to accept.</li>
+          <li><strong>Stay on gas via imported LNG.</strong> Sasol's chief executive has put the LNG price at
+            <strong>three to five times</strong> the current regulated $3.00–3.50/GJ. That is the honest number to
+            plan against.</li>
+          <li><strong>Electrify.</strong> A heat pump does not beat cheap domestic coal on running cost. It does
+            beat LNG — comfortably, at every multiple in that range.</li>
+        </ol>
+        <p style="font-size:11.5px;line-height:1.6;margin:0">The comparison that matters is therefore
+          <strong>not electricity against the gas price you pay today</strong>. It is electricity against the gas
+          price you will pay after the cliff. Set the calculator below to an LNG price and see for yourself.</p>
+      </div>
+
+      <p style="font-size:11.5px"><strong>Three things make the case stronger than the running cost alone.</strong></p>
+      <ul style="font-size:11.5px;line-height:1.65;margin:0 0 12px 18px">
+        <li><strong>Carbon border taxes protect your exports.</strong> The EU's Carbon Border Adjustment Mechanism
+          prices the embedded emissions of imported goods, and other markets are following. If your product carries
+          coal-fired process heat, that cost lands at the border whether or not South Africa taxes it at home.
+          Electrified heat on a decarbonising grid is the hedge.</li>
+        <li><strong>Your customers have their own targets.</strong> Scope 3 commitments from multinational buyers
+          increasingly reach into supplier emissions. Process heat is usually the largest single line in a
+          manufacturer's footprint.</li>
+        <li><strong>Electricity is the fuel with a floor, not a cliff.</strong> Gas supply is contracting and its
+          price is about to be set by a global LNG market. Grid electricity has its own problems, but it is not
+          about to stop arriving.</li>
+      </ul>
+      <div class="panel" style="margin:0 0 14px;box-shadow:none">
+        <div class="ph"><h2>Process heat switching calculator</h2><span class="tag">what your heat actually costs</span></div>
+        <div class="pb">
+          <p style="font-size:11.5px;color:var(--ink2)">Enter what you burn now and what temperature you need.
+            This compares the cost of a useful kilowatt-hour of heat across the options, including carbon.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px">
+            <label>Current fuel
+              <select id="i_fuel" onchange="fuelDefaults()">
+                <option value="coal">Coal (bituminous)</option>
+                <option value="hfo">Heavy fuel oil</option>
+                <option value="diesel">Diesel</option>
+                <option value="lpg">LPG</option>
+                <option value="gas">Piped natural gas (current regulated price)</option>
+                <option value="lng3">— replaced by LNG at 3× current price</option>
+                <option value="lng4">— replaced by LNG at 4× current price</option>
+                <option value="lng5">— replaced by LNG at 5× current price</option>
+                <option value="elec">Electric resistance boiler</option>
+              </select></label>
+            <label>Fuel price <span id="i_unit" class="mono" style="color:var(--ink2)"></span>
+              <input type="number" id="i_price" step="0.5"></label>
+            <label>Boiler efficiency (%)
+              <input type="number" id="i_eff" value="75" step="1"></label>
+            <label>Process temperature needed (°C)
+              <input type="number" id="i_temp" value="90" step="5"></label>
+            <label>Annual heat demand (GJ)
+              <input type="number" id="i_gj" value="30000" step="1000"></label>
+            <label>Industrial electricity tariff (R/kWh)
+              <input type="number" id="i_elec" value="1.90" step="0.05"></label>
+            <label style="grid-column:1/-1">Carbon price you actually pay (R/tCO₂)
+              <input type="number" id="i_carbon" value="46" step="10"></label>
+          </div>
+          <button class="go" onclick="runIndustrial()">Compare my options</button>
+          <div id="i_out" style="margin-top:12px"></div>
+        </div>
+      </div>
+
       <div class="soon">
-        <p style="margin-top:2px">Planned tools and guidance:</p>
+        <p style="margin-top:2px">Also planned:</p>
         <ul style="margin:6px 0 0 18px;line-height:1.7">
           <li><strong>Heat pump feasibility screening</strong> — by sector, current fuel, process temperature and
             load factor. Food and beverage, textiles, pulp and paper, and chemicals have the most to gain.</li>
@@ -391,6 +481,238 @@ function rank(){
     + 'mid-range retail and vary widely by installer. Get three quotes, and ask what happens to the old geyser.</div>';
 }
 rank();
+
+/* ══════════════ INDUSTRIAL PROCESS HEAT ══════════════════════════════════
+ * Compares the cost of a useful kilowatt-hour of heat across fuels and against
+ * a heat pump, including carbon.
+ *
+ * THE HONEST FINDING, which most heat pump marketing avoids: South African
+ * industrial coal is very cheap - around R1,100-1,600 a tonne delivered - which
+ * works out near R0.24 per useful kWh. No heat pump beats that on running cost
+ * at an industrial tariff. A study of solar thermal for South African beverage
+ * producers reached the same conclusion: it only beats coal above about
+ * US$250/tonne, roughly three times the domestic price.
+ *
+ * Where heat pumps win, and win decisively, is against heavy fuel oil (R1.46),
+ * diesel (R2.66), LPG (R3.30) and electric resistance boilers (R1.92). Those
+ * are common in food and beverage, textiles, pharmaceuticals and anywhere
+ * without a coal handling yard - and that is where the opportunity actually is.
+ *
+ * Energy contents and emission factors are standard IPCC/DEFRA values; COP by
+ * delivery temperature reflects commercially available industrial machines.
+ */
+const IFUEL = {
+  coal:   { name:'Coal (bituminous)',        price:1300, unit:'R/tonne', gjPer:26.0,   eff:75, ef:94.6 },
+  hfo:    { name:'Heavy fuel oil',           price:14.0, unit:'R/litre', gjPer:0.0405, eff:85, ef:77.4 },
+  diesel: { name:'Diesel',                   price:23.0, unit:'R/litre', gjPer:0.0358, eff:87, ef:74.1 },
+  lpg:    { name:'LPG',                      price:38.0, unit:'R/kg',    gjPer:0.046,  eff:90, ef:63.1 },
+  // Regulated piped gas has been about $3.00-3.50/GJ, roughly R53/GJ at
+  // R16.21/USD. That is the price that is GOING AWAY. The LNG rows below use
+  // Sasol's own guidance of three to five times that.
+  gas:    { name:'Piped natural gas (current regulated)', price:53, unit:'R/GJ', gjPer:1.0, eff:90, ef:56.1 },
+  lng3:   { name:'Imported LNG (3× current gas price)',  price:158, unit:'R/GJ', gjPer:1.0, eff:90, ef:56.1 },
+  lng4:   { name:'Imported LNG (4× current gas price)',  price:211, unit:'R/GJ', gjPer:1.0, eff:90, ef:56.1 },
+  lng5:   { name:'Imported LNG (5× current gas price)',  price:263, unit:'R/GJ', gjPer:1.0, eff:90, ef:56.1 },
+  elec:   { name:'Electric resistance',      price:1.90, unit:'R/kWh',   gjPer:0.0036, eff:99, ef:289  },
+};
+// Grid emission factor, tCO2 per MWh sent out - the same 1.04 the GridTwin
+// dispatch model uses, so the two sites cannot contradict each other.
+const GRID_EF_T_PER_MWH = 1.04;
+
+function copFor(tempC){
+  // Commercially available industrial heat pumps, from an ambient or low-grade
+  // waste heat source. Above about 150 C the technology is demonstration-stage
+  // and the tool says so rather than extrapolating.
+  if (tempC <= 60)  return 4.5;
+  if (tempC <= 80)  return 3.8;
+  if (tempC <= 100) return 3.2;
+  if (tempC <= 120) return 2.7;
+  if (tempC <= 150) return 2.2;
+  return null;
+}
+
+function fuelDefaults(){
+  const f = IFUEL[document.getElementById('i_fuel').value];
+  document.getElementById('i_price').value = f.price;
+  document.getElementById('i_eff').value   = f.eff;
+  document.getElementById('i_unit').textContent = '(' + f.unit + ')';
+}
+
+function runIndustrial(){
+  const out = document.getElementById('i_out');
+  const key  = document.getElementById('i_fuel').value;
+  const f    = IFUEL[key];
+  const price= parseFloat(document.getElementById('i_price').value) || f.price;
+  const eff  = Math.max(1, parseFloat(document.getElementById('i_eff').value) || f.eff) / 100;
+  const temp = parseFloat(document.getElementById('i_temp').value) || 90;
+  const gj   = Math.max(0, parseFloat(document.getElementById('i_gj').value) || 0);
+  const eTar = parseFloat(document.getElementById('i_elec').value) || 1.90;
+  const carb = Math.max(0, parseFloat(document.getElementById('i_carbon').value) || 0);
+
+  const kWhUsefulPerUnit = f.gjPer * 277.78 * eff;      // useful kWh per unit of fuel
+  const fuelR   = price / kWhUsefulPerUnit;              // R per useful kWh
+  const fuelCO2 = (f.ef / 277.78) / eff / 1000;          // tCO2 per useful kWh
+  const fuelTot = fuelR + fuelCO2 * carb;
+
+  const cop = copFor(temp);
+  const hpR   = cop ? eTar / cop : null;
+  const hpCO2 = cop ? (GRID_EF_T_PER_MWH / 1000) / cop : null;
+  const hpTot = cop ? hpR + hpCO2 * carb : null;
+
+  const elecR   = eTar / 0.99;
+  const elecTot = elecR + (GRID_EF_T_PER_MWH/1000)/0.99 * carb;
+
+  const usefulKWh = gj * 277.78;   // demand is stated as useful heat
+  const R  = v => 'R' + Math.round(v).toLocaleString();      // annual rands
+  const Rc = v => 'R' + v.toFixed(2);                        // per-kWh, needs cents
+
+  let verdict, colour;
+  if (!cop){
+    verdict = `At <strong>${temp} °C</strong> a heat pump is not a standard commercial option — machines are
+      generally available to about 150 °C. Look instead at waste heat recovery, an electric boiler where power is
+      cheap or curtailed, or solar thermal as a preheat stage.`;
+    colour = 'var(--ink2)';
+  } else if (hpTot < fuelTot){
+    const saveYr = (fuelTot - hpTot) * usefulKWh;
+    verdict = `A heat pump is <strong>cheaper than your current fuel</strong> — about
+      <strong>${Rc(fuelTot - hpTot)}</strong> less per useful kWh, which on your stated demand is
+      <strong>${R(saveYr)} a year</strong>. This is the case worth taking to a supplier.`;
+    colour = 'var(--ok)';
+  } else if (key === 'gas'){
+    // Special case worth interrupting for: losing to the CURRENT gas price is
+    // not a reason to do nothing, because that price is the one disappearing.
+    const lngTot = (211 / (277.78 * eff)) + fuelCO2 * carb;   // 4x, mid of Sasol's range
+    const saveVsLng = (lngTot - hpTot) * usefulKWh;
+    verdict = `A heat pump costs <strong>${Rc(hpTot - fuelTot)} more per useful kWh</strong> than the gas price you
+      pay today — but <strong>that price is the one going away</strong>. Against imported LNG at four times the
+      current regulated price, which is the middle of Sasol's own guidance, the heat pump is
+      <strong>${Rc(lngTot - hpTot)} per kWh cheaper</strong>, or about <strong>${R(saveVsLng)} a year</strong> at
+      your demand. Re-run this with one of the LNG options selected — that is the comparison your investment case
+      has to survive.`;
+    colour = '#C9A227';
+  } else {
+    const gap = hpTot - fuelTot;
+    const breakEvenCarbon = (hpCO2 < fuelCO2) ? (hpR - fuelR) / (fuelCO2 - hpCO2) : null;
+    verdict = `A heat pump would cost <strong>${Rc(gap)} more per useful kWh</strong> than your current fuel, so it
+      does not pay on running cost alone. That is the honest answer and it is common in South Africa — domestic
+      coal is unusually cheap.
+      ${ breakEvenCarbon && breakEvenCarbon < 3000
+          ? `It would break even at a carbon price of about <strong>${R(breakEvenCarbon)}/tCO₂</strong>
+             (you are paying ${R(carb)} today; the Phase 2 headline rate is R308).`
+          : '' }
+      Worth revisiting if you have waste heat to raise the source temperature, or if your fuel supply is at risk.`;
+    colour = 'var(--alert)';
+  }
+
+  const row = (n, r, co2, note) => `
+    <tr><td>${n}</td><td class="n">${r === null ? '—' : 'R' + r.toFixed(2)}</td>
+        <td class="n">${co2 === null ? '—' : (co2*1000).toFixed(2)}</td>
+        <td style="font-size:10px;color:var(--ink2)">${note || ''}</td></tr>`;
+
+  out.innerHTML = `
+    <div style="border-left:3px solid ${colour};padding:9px 12px;background:var(--panel2);margin-bottom:11px;font-size:12px;line-height:1.55">
+      ${verdict}</div>
+    <table>
+      <tr><th>Option</th><th style="text-align:right">R / useful kWh</th>
+          <th style="text-align:right">kg CO₂ / kWh</th><th></th></tr>
+      ${row(f.name + ' (your current)', fuelTot, fuelCO2, `${(eff*100).toFixed(0)} % boiler efficiency`)}
+      ${row(cop ? `Heat pump to ${temp} °C` : 'Heat pump', hpTot, hpCO2, cop ? `COP ${cop.toFixed(1)}` : 'not available at this temperature')}
+      ${row('Electric boiler', elecTot, (GRID_EF_T_PER_MWH/1000)/0.99, 'simple, but you pay full tariff for every kWh')}
+    </table>
+    <div style="font-size:11px;margin-top:10px;line-height:1.55">
+      Your ${gj.toLocaleString()} GJ a year is <strong>${Math.round(usefulKWh).toLocaleString()} kWh</strong> of useful heat,
+      costing about <strong>${R(fuelTot * usefulKWh)} a year</strong> at present and emitting about
+      <strong>${Math.round(fuelCO2 * usefulKWh).toLocaleString()} tCO₂</strong>.</div>
+    <div style="font-size:11px;margin-top:10px;line-height:1.55;border-top:1px solid var(--line);padding-top:8px">
+      <strong>Carbon border exposure.</strong> At those emissions, an EU Carbon Border Adjustment Mechanism charge
+      of €80/tCO₂ (about R1,550) on the embedded heat in exported product would be roughly
+      <strong>${R(fuelCO2 * usefulKWh * 1550)} a year</strong>${ cop ? `, against
+      ${R(hpCO2 * usefulKWh * 1550)} on electrified heat` : '' }. That cost lands at the border whether or not
+      South Africa prices carbon at home.</div>
+    <div style="font-size:10px;color:var(--ink2);line-height:1.5;margin-top:9px;border-top:1px solid var(--line);padding-top:7px">
+      Running costs only — capital, installation and downtime are not included, and a heat pump retrofit is a
+      significant project. Energy contents and emission factors are standard IPCC/DEFRA values; the grid factor is
+      1.04 tCO₂/MWh, the same figure used in our
+      <a href="https://nickhedley.github.io/gridtwin-za/">dispatch model</a>. Estimates for screening, not a
+      feasibility study.</div>`;
+}
+
+/* ══════════════ COMMERCIAL BUILDINGS ══════════════════════════════════════
+ * Ranked opportunities by building type. Shares are mid-range figures from
+ * commercial energy audit practice; the ranking is what matters, not the
+ * second decimal.
+ */
+const COMM = {
+  office: [
+    ['HVAC schedule and setpoints', 0, 0.10, 'The cheapest saving in any commercial building, and almost always wrong. Plant running before anyone arrives, after everyone leaves, and at weekends. Setpoints fighting each other floor to floor. Costs nothing but an afternoon with the BMS.'],
+    ['Lighting hours and occupancy sensing', 25000, 0.06, 'Not the bulbs — the hours. Corridors, parking and back-of-house lit around the clock. Sensors pay back faster than relamping.'],
+    ['LED retrofit where not yet done', 60000, 0.07, 'Only after the hours are fixed, or you are just running efficient lights all night instead of inefficient ones.'],
+    ['Power factor correction', 45000, 0.04, 'If your bill shows a kVA or reactive charge, this is often the fastest capital payback on the whole list.'],
+    ['Rooftop solar PV', 900000, 0.30, 'Offices match a solar profile unusually well — the load is there when the sun is. Size it after the efficiency work, not before.'],
+  ],
+  retail: [
+    ['Door heaters and open-front fridges', 15000, 0.08, 'Open refrigerated display cases are the single biggest avoidable load in food retail. Night blinds cost little and cut compressor run time sharply.'],
+    ['HVAC schedule and setpoints', 0, 0.08, 'Trading hours plus an hour, not around the clock. Check what happens on Sundays.'],
+    ['Lighting hours and occupancy sensing', 30000, 0.06, 'Display lighting has a real merchandising purpose; back-of-house and parking do not.'],
+    ['Refrigeration maintenance — seals, coils, defrost', 20000, 0.06, 'Dirty condensers and failed door seals quietly add 10-20 % to compressor energy. Cheap, and almost always overdue.'],
+    ['Rooftop solar PV', 700000, 0.28, 'Good roof area, daytime load. Strong fit once the refrigeration is fixed.'],
+  ],
+  cold: [
+    ['Refrigeration maintenance — seals, coils, defrost', 30000, 0.09, 'Dirty condensers, failed seals and defrost cycles running too often. In a cold store this is the whole ballgame, and it is maintenance rather than capital.'],
+    ['Floating head pressure control', 120000, 0.12, 'Lets condensing pressure fall when ambient allows instead of holding a fixed setpoint. One of the highest-return controls upgrades in refrigeration, and widely not done.'],
+    ['Door management and air curtains', 40000, 0.06, 'Every door-open second is warm air you pay to cool again. Strip curtains and interlocks are cheap.'],
+    ['Waste heat recovery from condensers', 180000, 0.05, 'You are rejecting heat outside while heating water inside. Recovering it is nearly free energy.'],
+    ['Rooftop solar PV', 1100000, 0.25, 'Cold stores run a heavy, steady daytime load — a good solar match, once the plant itself is efficient.'],
+  ],
+  hotel: [
+    ['Hot water — the biggest single load', 45000, 0.12, 'Guest hot water dominates a hotel bill much as the geyser dominates a home. Recirculation pumps running unnecessarily, and setpoints above 60 °C, are the usual culprits.'],
+    ['HVAC in unoccupied rooms', 25000, 0.09, 'Key-card or occupancy linkage so empty rooms are not conditioned. Standard in newer builds, absent in most older stock.'],
+    ['Heat pump water heating', 400000, 0.10, 'Hotels have the steady, year-round hot water demand that makes a commercial heat pump pay — usually a stronger case than in an office.'],
+    ['Laundry heat recovery', 90000, 0.04, 'If laundry is on site, the drain water is hot and you are paying to heat its replacement.'],
+    ['Rooftop solar PV', 800000, 0.22, 'Worth doing, but hotel load peaks in the evening — pair it with the hot water work rather than expecting solar alone to carry the bill.'],
+  ],
+};
+
+function runCommercial(){
+  const out = document.getElementById('c_out');
+  const spend = Math.max(0, parseFloat(document.getElementById('c_spend').value) || 0);
+  const type  = document.getElementById('c_type').value;
+  const tou   = document.getElementById('c_tou').value === '1';
+  if (!spend){ out.innerHTML = '<p style="font-size:11.5px;color:var(--alert)">Enter your monthly spend first.</p>'; return; }
+
+  const items = COMM[type].map(([name, cost, share, why]) => {
+    const monthly = spend * share;
+    return { name, cost, monthly, why, months: cost > 0 ? cost / Math.max(1, monthly) : 0 };
+  }).sort((a,b) => a.months - b.months);
+
+  const R = v => 'R' + Math.round(v).toLocaleString();
+  const pb = m => m === 0 ? '<strong>immediate</strong>'
+              : m < 12 ? '<strong>' + Math.round(m) + ' months</strong>'
+              : (m/12).toFixed(1) + ' years';
+
+  out.innerHTML =
+    (tou ? '' : '<div style="border-left:3px solid var(--alert);padding:8px 11px;background:var(--panel2);margin-bottom:10px;font-size:11.5px;line-height:1.55">'
+      + '<strong>Check whether you are on a time-of-use tariff.</strong> Most commercial customers above a modest '
+      + 'size are, and almost none actively manage against it. Shifting even part of your load out of the evening '
+      + 'peak window is a saving that costs nothing but scheduling.</div>')
+    + '<div style="font-size:11px;color:var(--ink2);margin-bottom:9px">Ranked by payback for a '
+    + ({office:'office',retail:'retail',cold:'cold storage or food retail',hotel:'hotel'}[type])
+    + '. Doing all of these would cut roughly <strong>' + R(items.reduce((a,b)=>a+b.monthly,0))
+    + ' a month</strong> from a ' + R(spend) + ' bill.</div>'
+    + items.map((t,i) => `
+      <div class="step${i===0?' first':''}">
+        <div class="nm">${i===0?'START HERE · ':''}${t.name}</div>
+        <div class="fig">${t.cost ? 'costs ~' + R(t.cost) : 'free'} · saves ~<strong>${R(t.monthly)}/month</strong> · pays back ${pb(t.months)}</div>
+        <div class="why">${t.why}</div>
+      </div>`).join('')
+    + '<div style="font-size:10px;color:var(--ink2);line-height:1.5;margin-top:9px;border-top:1px solid var(--line);padding-top:7px">'
+    + 'Shares are mid-range figures from commercial energy audit practice and vary widely with building age, '
+    + 'occupancy and plant condition. The ORDER is the useful output, not the second decimal. A metered audit '
+    + 'beats any calculator, including this one.</div>';
+}
+
+fuelDefaults();
+
 </script>
 </body>
 </html>
