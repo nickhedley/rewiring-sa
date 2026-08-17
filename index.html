@@ -157,6 +157,7 @@ td.n{font-family:'IBM Plex Mono',monospace; text-align:right}
   <div class="panel">
     <div class="ph"><h2>Where the money actually goes</h2><span class="tag">typical SA household</span></div>
     <div class="pb">
+      <div id="donut" style="margin-bottom:12px"></div>
       <table>
         <tr><th>Load</th><th style="text-align:right">Share of the bill</th></tr>
         <tr><td>Electric geyser</td><td class="n">40–50 %</td></tr>
@@ -420,6 +421,110 @@ document.querySelectorAll('#seg button').forEach(b => {
  * R1,500 beat a R110,000 solar system on return per rand every time, and
  * almost nobody is told that, because nobody sells blankets for R110,000.
  */
+/* ══════════════ CHARTS ═══════════════════════════════════════════════════
+ * Inline SVG, no library. Keeps the page a single self-contained file and
+ * matches how the dispatch model draws.
+ */
+const CH = { geyser:'#C4785A', heat:'#9E5C42', fridge:'#4A6B7A', light:'#6A8E9E',
+             cook:'#C9A227', other:'#AEB3AA', good:'#4A8C5C', ink:'#22292B' };
+
+/* Donut of where a household bill goes. The whole argument in one picture:
+ * the geyser slice is nearly half the circle. Shares are sourced - see the
+ * table beneath it. */
+function billDonut(){
+  const seg = [
+    ['Electric geyser', 42, CH.geyser],
+    ['Space heating (winter)', 16, CH.heat],
+    ['Fridges & freezers', 12, CH.fridge],
+    ['Lighting & standby', 12, CH.light],
+    ['Cooking', 10, CH.cook],
+    ['Everything else', 8, CH.other],
+  ];
+  const R = 62, r = 34, cx = 78, cy = 78;
+  let a0 = -Math.PI/2, paths = '';
+  seg.forEach(([nm, pct, col]) => {
+    const a1 = a0 + pct/100 * Math.PI*2;
+    const big = pct > 50 ? 1 : 0;
+    const P = (rad, ang) => [cx + rad*Math.cos(ang), cy + rad*Math.sin(ang)];
+    const [x0,y0]=P(R,a0), [x1,y1]=P(R,a1), [x2,y2]=P(r,a1), [x3,y3]=P(r,a0);
+    paths += `<path d="M${x0.toFixed(1)},${y0.toFixed(1)} A${R},${R} 0 ${big} 1 ${x1.toFixed(1)},${y1.toFixed(1)}`
+           + ` L${x2.toFixed(1)},${y2.toFixed(1)} A${r},${r} 0 ${big} 0 ${x3.toFixed(1)},${y3.toFixed(1)} Z"`
+           + ` fill="${col}" stroke="#F7F8F5" stroke-width="1.5"><title>${nm}: ${pct}%</title></path>`;
+    a0 = a1;
+  });
+  return `<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+    <svg viewBox="0 0 156 156" width="156" height="156" role="img" aria-label="Household electricity bill breakdown">
+      ${paths}
+      <text x="78" y="73" text-anchor="middle" style="font:700 15px 'Saira Condensed',sans-serif;fill:${CH.geyser}">42%</text>
+      <text x="78" y="88" text-anchor="middle" style="font:400 8.5px Roboto,sans-serif;fill:#5A6560">GEYSER</text>
+    </svg>
+    <div style="flex:1;min-width:170px">
+      ${seg.map(([nm,pct,col]) => `<div style="display:flex;align-items:center;gap:7px;font-size:11px;margin-bottom:3px">
+        <span style="width:11px;height:11px;background:${col};flex-shrink:0"></span>
+        <span style="flex:1">${nm}</span>
+        <span class="mono" style="font-weight:600">${pct}%</span></div>`).join('')}
+    </div></div>`;
+}
+
+/* Waterfall: your bill coming down, step by step. Used by households and by
+ * commercial - the shape of the argument is identical, only the steps differ. */
+function waterfall(spend, items, unit){
+  const W = 100;                       // percent-based, so it scales to any width
+  let running = spend;
+  const rows = items.map(t => {
+    const from = running, to = running - t.monthly;
+    running = to;
+    return { nm: t.name, from, to, cut: t.monthly };
+  });
+  const R = v => 'R' + Math.round(v).toLocaleString();
+  const bar = (from, to) => {
+    const l = 100 * to / spend, w = 100 * (from - to) / spend;
+    return `<div style="position:relative;height:17px;background:var(--panel2);border:1px solid var(--line)">
+      <div style="position:absolute;left:0;top:0;bottom:0;width:${l.toFixed(1)}%;background:${CH.ink};opacity:.82"></div>
+      <div style="position:absolute;left:${l.toFixed(1)}%;top:0;bottom:0;width:${w.toFixed(1)}%;background:${CH.good}"></div>
+    </div>`;
+  };
+  return `<div style="margin:10px 0 4px;font-size:10.5px;color:var(--ink2)">
+      Your bill coming down, one step at a time &mdash;
+      <span style="color:${CH.good};font-weight:600">green is what each step saves</span>.</div>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink2);margin-bottom:3px">
+      <span class="mono">R0</span><span class="mono">${R(spend)} today</span></div>
+    ${rows.map(r => `<div style="margin-bottom:6px">
+      <div style="display:flex;justify-content:space-between;font-size:10.5px;margin-bottom:2px">
+        <span>${r.nm}</span><span class="mono" style="color:${CH.good};font-weight:600">&minus;${R(r.cut)}</span></div>
+      ${bar(r.from, r.to)}</div>`).join('')}
+    <div style="border-top:1.5px solid var(--ink);margin-top:7px;padding-top:6px;display:flex;justify-content:space-between;font-size:12px">
+      <span style="font-weight:600">Bill after all steps</span>
+      <span class="mono" style="font-weight:700;color:${CH.good}">${R(running)}${unit||''}</span></div>`;
+}
+
+/* Industrial: the gas cliff in one picture. Cost of a useful kWh of heat across
+ * every option, with the heat pump marked. This is the chart that makes the
+ * argument - current gas is cheap, LNG is not, and the heat pump sits below
+ * every LNG scenario. */
+function heatBars(rows, hpCost, temp){
+  const max = Math.max(...rows.map(r => r.v), hpCost) * 1.08;
+  return `<div style="margin:12px 0 4px;font-size:10.5px;color:var(--ink2)">
+      Cost of a useful kilowatt-hour of heat. The dashed line is a heat pump at ${temp}&nbsp;&deg;C
+      &mdash; anything to the right of it costs you more.</div>
+    <div style="position:relative;padding-right:4px">
+      ${rows.map(r => {
+        const w = 100 * r.v / max;
+        return `<div style="margin-bottom:5px">
+          <div style="display:flex;justify-content:space-between;font-size:10.5px;margin-bottom:2px">
+            <span${r.hi ? ' style="font-weight:600"' : ''}>${r.nm}</span>
+            <span class="mono" style="font-weight:600">R${r.v.toFixed(2)}</span></div>
+          <div style="height:15px;background:var(--panel2);border:1px solid var(--line);position:relative">
+            <div style="position:absolute;left:0;top:0;bottom:0;width:${w.toFixed(1)}%;background:${r.col}"></div>
+          </div></div>`;
+      }).join('')}
+      <div style="position:absolute;top:14px;bottom:4px;left:${(100*hpCost/max).toFixed(1)}%;
+        border-left:2px dashed ${CH.good};pointer-events:none"></div>
+    </div>
+    <div style="font-size:10px;color:${CH.good};font-weight:600;margin-top:2px">
+      &#9478; heat pump at ${temp}&nbsp;&deg;C &mdash; R${hpCost.toFixed(2)}/kWh</div>`;
+}
+
 const STEPS = [
   { id:'thermo', box:'c_thermo', name:'Turn the geyser thermostat down to 55–60 °C', cost:0, share:0.04,
     why:'Most geysers leave the factory at 65–70 °C. Every degree above 60 is heat leaking through the tank wall for no benefit, and it scales the element faster. Free, ten minutes, and you will not notice it at the tap.' },
@@ -470,6 +575,7 @@ function rank(){
   out.innerHTML =
     '<div style="font-size:11px;color:var(--ink2);margin-bottom:9px">Ranked by payback, fastest return first. '
     + 'Doing all of these would cut roughly <strong>' + R(total) + ' a month</strong> from a ' + R(spend) + ' bill.</div>'
+    + waterfall(spend, todo, ' a month')
     + todo.map((t,i) => `
       <div class="step${i===0?' first':''}">
         <div class="nm">${i===0?'START HERE · ':''}${t.name}</div>
@@ -609,9 +715,22 @@ function runIndustrial(){
         <td class="n">${co2 === null ? '—' : (co2*1000).toFixed(2)}</td>
         <td style="font-size:10px;color:var(--ink2)">${note || ''}</td></tr>`;
 
+  // Every option on one scale, so the gas cliff is visible rather than argued.
+  const bars = [
+    { nm:'Coal (bituminous)',            v:(1300/(26.0*277.78*0.75)) + (94.6/277.78/0.75/1000)*carb, col:'#4A3120' },
+    { nm:'Piped gas (current regulated)',v:(53/(277.78*0.90))        + (56.1/277.78/0.90/1000)*carb, col:'#6A8E9E' },
+    { nm:'LNG at 3× current',            v:(158/(277.78*0.90))       + (56.1/277.78/0.90/1000)*carb, col:'#C9A227' },
+    { nm:'LNG at 4× current',            v:(211/(277.78*0.90))       + (56.1/277.78/0.90/1000)*carb, col:'#C4785A' },
+    { nm:'LNG at 5× current',            v:(263/(277.78*0.90))       + (56.1/277.78/0.90/1000)*carb, col:'#9E5C42' },
+    { nm:'Heavy fuel oil',               v:(14.0/(0.0405*277.78*0.85))+(77.4/277.78/0.85/1000)*carb, col:'#7A6FA0' },
+    { nm:'Electric resistance boiler',   v:elecTot, col:'#AEB3AA' },
+  ].map(b => ({ ...b, hi: false })).sort((a,b) => a.v - b.v);
+  bars.forEach(b => { if (b.nm.startsWith(f.name.slice(0,12))) b.hi = true; });
+
   out.innerHTML = `
     <div style="border-left:3px solid ${colour};padding:9px 12px;background:var(--panel2);margin-bottom:11px;font-size:12px;line-height:1.55">
       ${verdict}</div>
+    ${ cop ? heatBars(bars, hpTot, temp) : '' }
     <table>
       <tr><th>Option</th><th style="text-align:right">R / useful kWh</th>
           <th style="text-align:right">kg CO₂ / kWh</th><th></th></tr>
@@ -699,6 +818,7 @@ function runCommercial(){
     + ({office:'office',retail:'retail',cold:'cold storage or food retail',hotel:'hotel'}[type])
     + '. Doing all of these would cut roughly <strong>' + R(items.reduce((a,b)=>a+b.monthly,0))
     + ' a month</strong> from a ' + R(spend) + ' bill.</div>'
+    + waterfall(spend, items, ' a month')
     + items.map((t,i) => `
       <div class="step${i===0?' first':''}">
         <div class="nm">${i===0?'START HERE · ':''}${t.name}</div>
@@ -712,6 +832,10 @@ function runCommercial(){
 }
 
 fuelDefaults();
+// Static chart - the bill breakdown does not depend on any input, and it is
+// the whole argument in one picture, so it renders on load rather than
+// waiting for someone to press a button.
+document.getElementById('donut').innerHTML = billDonut();
 
 </script>
 </body>
