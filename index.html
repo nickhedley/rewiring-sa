@@ -154,7 +154,7 @@ td.n{font-family:'IBM Plex Mono',monospace; text-align:right}
         <label><input type="checkbox" id="c_blanket"> Geyser blanket &amp; pipe lagging</label>
         <label><input type="checkbox" id="c_timer"> Geyser timer or smart switch</label>
         <label><input type="checkbox" id="c_leds"> All LED lighting</label>
-        <label><input type="checkbox" id="c_hems"> Home energy monitor</label>
+        <label><input type="checkbox" id="c_hems"> Home energy management system</label>
         <label><input type="checkbox" id="c_roofpaint"> Reflective roof paint</label>
         <label><input type="checkbox" id="c_hp"> Heat pump or solar geyser</label>
         <label><input type="checkbox" id="c_pv"> Rooftop solar PV</label>
@@ -563,8 +563,8 @@ const STEPS = [
     why:'Stops the element reheating a full tank overnight and through the working day. It also shifts load off the evening peak, which helps you on a time-of-use tariff and helps the grid either way.' },
   { id:'leds', box:'c_leds', name:'Replace remaining bulbs with LEDs', cost:1500, share:0.06,
     why:'Lighting and standby together run 10–15 % of the bill. LEDs use roughly a fifth of what halogens and CFLs do, and last years longer.' },
-  { id:'hems', box:'c_hems', name:'Home energy management system', cost:2500, share:0.05,
-    why:'A monitor on the distribution board showing what each circuit draws, in real time. It saves nothing on its own \u2013 the saving comes from what you do with it: shifting the geyser and pool pump off peak, and finding the appliance you did not know was running.' },
+  { id:'hems', box:'c_hems', name:'Home energy management system', cost:8000, share:0.08,
+    why:'A controller that switches loads itself rather than just showing you the numbers. It runs the geyser, pool pump and dishwasher when your panels are producing or the tariff is cheap, and holds them off when it is not. Worth most alongside solar, where the gain is using your own generation instead of exporting it for less than you buy it back.' },
   { id:'roofpaint', box:'c_roofpaint', name:'Reflective roof paint', cost:16000, share:0.03,
     why:'A cool coating reflects sunlight instead of absorbing it, cutting roof surface temperatures sharply and taking 10\u201320% off cooling. That is a small share of a South African bill, so the saving is modest \u2013 but it also extends roof life, which is usually the better reason to do it.' },
   { id:'hp', box:'c_hp', name:'Heat pump or solar water heater', cost:25000, share:0.28,
