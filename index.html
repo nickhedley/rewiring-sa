@@ -145,6 +145,7 @@ td.n{font-family:'IBM Plex Mono',monospace; text-align:right}
         solar. In typical South African homes, <strong>electric geysers make up 40–50 % of
         electricity bills</strong>. The cheapest options for reducing power costs pay for themselves
         in months. Tell us what you already have and we’ll rank what’s left.</p>
+      <p style="font-size:11.5px;color:var(--ink);font-weight:600;margin-bottom:9px;padding:7px 10px;background:var(--panel2);border-left:3px solid var(--ink)">Can electricity consumption be reduced before installing new power generating equipment?</p>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
         <label style="grid-column:1/-1">Monthly electricity spend (R)
@@ -155,10 +156,12 @@ td.n{font-family:'IBM Plex Mono',monospace; text-align:right}
         <label><input type="checkbox" id="c_timer"> Geyser timer or smart switch</label>
         <label><input type="checkbox" id="c_leds"> All LED lighting</label>
         <label><input type="checkbox" id="c_hems"> Home energy management system</label>
+        <label><input type="checkbox" id="c_poolpump"> Variable speed pool pump</label>
         <label><input type="checkbox" id="c_roofpaint"> Reflective roof paint</label>
         <label><input type="checkbox" id="c_hp"> Heat pump or solar geyser</label>
         <label><input type="checkbox" id="c_pv"> Rooftop solar PV</label>
       </div>
+<style>.notfor{font-size:10px;color:var(--ink2);line-height:1.5;margin-top:5px;padding-top:5px;border-top:1px dotted var(--line2)}</style>
       <button class="go" onclick="rank()">Rank my options</button>
 
       <div id="out" style="margin-top:12px"></div>
@@ -501,9 +504,15 @@ function waterfall(spend, items, unit){
   const W = 100;                       // percent-based, so it scales to any width
   let running = spend;
   const rows = items.map(t => {
-    const from = running, to = running - t.monthly;
+    // Savings COMPOUND. A step that cuts 10% cuts 10% of what is left, not 10%
+    // of the original bill - otherwise the shares are additive, can exceed 100%,
+    // and the waterfall runs negative. This is also self-limiting: the bill
+    // approaches zero but never passes it.
+    const frac = spend > 0 ? Math.min(1, t.monthly / spend) : 0;
+    const cut = running * frac;
+    const from = running, to = running - cut;
     running = to;
-    return { nm: t.name, from, to, cut: t.monthly };
+    return { nm: t.name, from, to, cut };
   });
   const R = v => 'R' + Math.round(v).toLocaleString();
   const bar = (from, to) => {
@@ -556,21 +565,23 @@ function heatBars(rows, hpCost, temp){
 
 const STEPS = [
   { id:'thermo', box:'c_thermo', name:'Turn the geyser thermostat down to 55–60 °C', cost:0, share:0.04,
-    why:'Most geysers leave the factory with the thermostat at 65–70°C, which is unnecessarily high. Adjusting downwards is free, takes 10 minutes, and you will not notice it at the tap.' },
+    why:'Most geysers leave the factory with the thermostat at 65–70°C, which is unnecessarily high. Adjusting downwards is free, takes 10 minutes, and you will not notice it at the tap.', notFor:'Not if anyone in the house needs water hotter than 60&nbsp;&deg;C for a medical reason, or if your geyser feeds a dishwasher with no internal heater.' },
   { id:'blanket', box:'c_blanket', name:'Geyser blanket and pipe lagging', cost:1200, share:0.06,
-    why:'A geyser sitting in a cold roof space loses heat around the clock, whether or not anyone runs a tap. Insulating the tank and the first few metres of pipe is the highest-return rand in most South African homes.' },
+    why:'A geyser sitting in a cold roof space loses heat around the clock, whether or not anyone runs a tap. Insulating the tank and the first few metres of pipe is the highest-return rand in most South African homes.', notFor:'Not if your geyser is already inside an insulated ceiling void rather than an open roof space, or if it carries a factory jacket in good condition.' },
   { id:'timer', box:'c_timer', name:'Geyser timer or smart switch', cost:900, share:0.05,
-    why:'Stops the element reheating a full tank overnight and through the working day. It also shifts load off the evening peak, which helps you on a time-of-use tariff and helps the grid either way.' },
+    why:'Stops the element reheating a full tank overnight and through the working day. It also shifts load off the evening peak, which helps you on a time-of-use tariff and helps the grid either way.', notFor:'Not if the household draws hot water unpredictably through the day, or if the geyser is already on a ripple-control relay.' },
   { id:'leds', box:'c_leds', name:'Replace remaining bulbs with LEDs', cost:1500, share:0.06,
-    why:'Lighting and standby together run 10–15 % of the bill. LEDs use roughly a fifth of what halogens and CFLs do, and last years longer.' },
+    why:'Lighting and standby together run 10–15 % of the bill. LEDs use roughly a fifth of what halogens and CFLs do, and last years longer.', notFor:'Not if you have already replaced most bulbs. The saving is per bulb, so a handful left over is not worth a callout.' },
   { id:'hems', box:'c_hems', name:'Home energy management system', cost:8000, share:0.08,
-    why:'A controller that switches loads itself rather than just showing you the numbers. It runs the geyser, pool pump and dishwasher when your panels are producing or the tariff is cheap, and holds them off when it is not. Worth most alongside solar, where the gain is using your own generation instead of exporting it for less than you buy it back.' },
+    why:'A controller that switches loads itself rather than just showing you the numbers. It runs the geyser, pool pump and dishwasher when your panels are producing or the tariff is cheap, and holds them off when it is not. Worth most alongside solar, where the gain is using your own generation instead of exporting it for less than you buy it back.', notFor:'Not if you have no solar, no time-of-use tariff and no large shiftable loads. Without something to shift, there is nothing for it to do.' },
+  { id:'poolpump', box:'c_poolpump', name:'Variable speed pool pump', cost:12000, share:0.10,
+    why:'Only if you have a pool \u2013 but then it is one of the largest single loads in the house, at 10\u201320% of the bill. Halving pump speed cuts its power to about an eighth, so a variable speed unit runs slower for longer and moves the same water for far less. Expect 50\u201380% off the pump.', notFor:'Not if you have no pool, or if your pump is newer and already variable speed. Replacing a working single-speed pump early rarely pays back.' },
   { id:'roofpaint', box:'c_roofpaint', name:'Reflective roof paint', cost:16000, share:0.03,
-    why:'A cool coating reflects sunlight instead of absorbing it, cutting roof surface temperatures sharply and taking 10\u201320% off cooling. That is a small share of a South African bill, so the saving is modest \u2013 but it also extends roof life, which is usually the better reason to do it.' },
+    why:'A cool coating reflects sunlight instead of absorbing it, cutting roof surface temperatures sharply and taking 10\u201320% off cooling. That is a small share of a South African bill, so the saving is modest \u2013 but it also extends roof life, which is usually the better reason to do it.', notFor:'Not if your roof is shaded, already light-coloured, or due for replacement within a few years. Also does little in a cold-winter town where you want the heat.' },
   { id:'hp', box:'c_hp', name:'Heat pump or solar water heater', cost:25000, share:0.28,
-    why:'Two routes to the same job, and the biggest efficiency step most households can take. A solar geyser heats water directly from roof collectors and cuts water heating by 60\u201380% \u2013 cheaper, around R25,000 installed, with little to break. A heat pump moves heat rather than making it, costs nearer R33,000, and works at night. Pick one, not both.' },
+    why:'Two routes to the same job, and the biggest efficiency step most households can take. A solar geyser heats water directly from roof collectors and cuts water heating by 60\u201380% \u2013 cheaper, around R25,000 installed, with little to break. A heat pump moves heat rather than making it, costs nearer R33,000, and works at night. Pick one, not both.', notFor:'Not if your geyser is nearly new and working, or if you have neither the roof space for collectors nor an outdoor spot for a heat pump. Flats rarely have either.' },
   { id:'pv', box:'c_pv', name:'Rooftop solar PV', cost:110000, share:0.35,
-    why:'Worth doing – but after the cheap efficiency steps, because every kilowatt-hour you stop wasting is a panel you never have to buy. Size it against your reduced bill, not your current one.' },
+    why:'Worth doing – but after the cheap efficiency steps, because every kilowatt-hour you stop wasting is a panel you never have to buy. Size it against your reduced bill, not your current one.', notFor:'Not if you rent, if your roof is shaded or north-facing space is limited, or if you have not done the cheap fixes first &ndash; you would be sizing a system for a bill you could have shrunk.' },
 ];
 
 function rank(){
@@ -603,7 +614,11 @@ function rank(){
   const pb = m => m === 0 ? '<strong>immediate</strong>'
               : m < 12 ? '<strong>' + Math.round(m) + ' months</strong>'
               : (m/12).toFixed(1) + ' years';
-  const total = todo.reduce((a,b) => a + b.monthly, 0);
+  // Compound, matching the waterfall below. Summing additively overstated the
+  // total and could exceed the bill itself.
+  let _left = spend;
+  for (const t of todo){ _left -= _left * Math.min(1, spend > 0 ? t.monthly / spend : 0); }
+  const total = spend - _left;
 
   out.innerHTML =
     '<div style="font-size:11px;color:var(--ink2);margin-bottom:9px">Ranked by payback, fastest return first. '
@@ -614,6 +629,7 @@ function rank(){
         <div class="nm">${i===0?'Start here – ':''}${t.name}</div>
         <div class="fig">${t.cost ? 'costs ~' + R(t.cost) : 'free'} · saves ~<strong>${R(t.monthly)}/month</strong> · pays back ${pb(t.months)}</div>
         <div class="why">${t.why}</div>
+        ${t.notFor ? `<div class="notfor">${t.notFor}</div>` : ''}
       </div>`).join('')
     + '<div style="font-size:10px;color:var(--ink2);line-height:1.5;margin-top:9px;border-top:1px solid var(--line);padding-top:7px">'
     + 'Estimates for guidance, not a quotation. Savings are shares of a typical South African bill; costs are '
@@ -857,6 +873,7 @@ function runCommercial(){
         <div class="nm">${i===0?'Start here – ':''}${t.name}</div>
         <div class="fig">${t.cost ? 'costs ~' + R(t.cost) : 'free'} · saves ~<strong>${R(t.monthly)}/month</strong> · pays back ${pb(t.months)}</div>
         <div class="why">${t.why}</div>
+        ${t.notFor ? `<div class="notfor">${t.notFor}</div>` : ''}
       </div>`).join('')
     + '<div style="font-size:10px;color:var(--ink2);line-height:1.5;margin-top:9px;border-top:1px solid var(--line);padding-top:7px">'
     + 'Shares are mid-range figures from commercial energy audit practice and vary widely with building age, '
